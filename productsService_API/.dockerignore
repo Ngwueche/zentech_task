@@ -1,0 +1,16 @@
+**/.git
+**/.gitignore
+**/.vs
+**/.vscode
+**/*.user
+**/*.md
+**/bin/
+**/obj/
+**/logs/
+**/TestResults/
+tests/
+*.db
+*.db-shm
+*.db-wal
+.dockerignore
+docker-compose.yml

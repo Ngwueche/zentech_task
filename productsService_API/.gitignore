@@ -1,0 +1,40 @@
+# Build outputs
+bin/
+obj/
+
+# Visual Studio IDE
+.vs/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Rider
+.idea/
+
+# NuGet
+*.nupkg
+*.snupkg
+packages/
+!packages/repositories.config
+*.nuget.props
+*.nuget.targets
+
+# Logs
+logs/
+*.log
+
+# SQLite databases (dev and test)
+*.db
+*.db-shm
+*.db-wal
+
+# Environment / secrets
+.env
+.env.local
+secrets.json
+appsettings.secrets.json
+
+# OS
+.DS_Store
+Thumbs.db

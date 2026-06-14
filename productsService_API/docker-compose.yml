@@ -1,0 +1,40 @@
+# Development / local-demo compose file.
+# Production deployments should supply secrets via a secrets manager,
+# not via environment variables in a committed file.
+#
+# Before running:
+#   1. Copy .env.example to .env
+#   2. Fill in JWT_KEY with a strong random secret (min 32 chars)
+#   3. docker compose up --build
+
+services:
+  products-api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    environment:
+      ASPNETCORE_ENVIRONMENT: Production
+      # SQLite database written inside the persistent volume
+      ConnectionStrings__DefaultConnection: "Data Source=/data/products.db"
+      # JWT — override Jwt:Key from a .env file; never commit the real key
+      Jwt__Issuer: "products-api"
+      Jwt__Audience: "products-api-clients"
+      Jwt__ExpiryMinutes: "60"
+      Jwt__Key: "${JWT_KEY:?JWT_KEY must be set — add it to a .env file}"
+      # CORS — add allowed frontend origins (one entry per index)
+      # Cors__AllowedOrigins__0: "https://your-frontend.example.com"
+    volumes:
+      - products-data:/data
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "curl -sf http://localhost:8080/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 20s
+
+volumes:
+  products-data:
+    driver: local
