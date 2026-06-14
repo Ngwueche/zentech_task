@@ -4,19 +4,19 @@ A modern, futuristic, production-grade React frontend for the Products Managemen
 
 ## Tech Stack
 
-| Layer | Technology |
-|---|---|
-| Framework | React 18 + TypeScript 5 |
-| Build Tool | Vite 5 |
-| Styling | Tailwind CSS 3 |
-| Routing | React Router v6 |
-| Server State | TanStack Query v5 |
-| Forms | React Hook Form v7 |
-| Validation | Zod |
-| HTTP | Axios |
-| Animations | Framer Motion |
-| Icons | Lucide React |
-| Toasts | React Hot Toast |
+| Layer        | Technology              |
+| ------------ | ----------------------- |
+| Framework    | React 18 + TypeScript 5 |
+| Build Tool   | Vite 5                  |
+| Styling      | Tailwind CSS 3          |
+| Routing      | React Router v6         |
+| Server State | TanStack Query v5       |
+| Forms        | React Hook Form v7      |
+| Validation   | Zod                     |
+| HTTP         | Axios                   |
+| Animations   | Framer Motion           |
+| Icons        | Lucide React            |
+| Toasts       | React Hot Toast         |
 
 ## Folder Structure
 
@@ -85,16 +85,16 @@ The dev server runs on `http://localhost:5173` by default.
 
 ## Available Routes
 
-| Route | Description |
-|---|---|
-| `/login` | Authentication page |
-| `/dashboard` | Overview dashboard with metrics |
-| `/products` | Products list with search and colour filter |
-| `/products/create` | Create new product form |
-| `/products/:id` | Product detail view |
-| `/products/:id/edit` | Edit product form |
-| `/health` | API health status page |
-| `*` | 404 not found page |
+| Route                | Description                                |
+| -------------------- | ------------------------------------------ |
+| `/login`             | Authentication page                        |
+| `/dashboard`         | Overview dashboard with metrics            |
+| `/products`          | Products list with search and color filter |
+| `/products/create`   | Create new product form                    |
+| `/products/:id`      | Product detail view                        |
+| `/products/:id/edit` | Edit product form                          |
+| `/health`            | API health status page                     |
+| `*`                  | 404 not found page                         |
 
 ## Production Considerations
 

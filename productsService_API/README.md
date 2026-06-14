@@ -241,7 +241,7 @@ await _eventPublisher.PublishAsync(
 
 ### Available Implementations
 
-| Class | Behaviour | When to use |
+| Class | Behavior | When to use |
 |-------|-----------|-------------|
 | `LoggingEventPublisher` | Logs the event as a Serilog structured entry | Development, CI, any environment without a broker |
 | `NoOpEventPublisher` | Silently discards the event | When logging the event would add unwanted noise |
@@ -359,26 +359,6 @@ internal sealed class SnsEventPublisher(IAmazonSimpleNotificationService sns, st
 }
 ```
 
----
-
-## Production Hardening
-
-The following controls are implemented and verified:
-
-| Control | Implementation |
-|---------|---------------|
-| **No hard-coded secrets** | `Jwt:Key` in `appsettings.json` is a clearly-labelled dev placeholder. Production value must be supplied via `Jwt__Key` environment variable or a secrets manager. The app throws `InvalidOperationException` on startup if the key is missing. |
-| **Error responses hide internals** | `GlobalExceptionHandler` returns only `"An unexpected error occurred."` for 500s. Stack traces and exception types are never serialised into responses. |
-| **Sensitive data not logged** | Passwords are never logged. Auth failures log only the username attempt, never the supplied credential. JWT tokens are not logged. |
-| **Swagger restricted to Development** | `UseSwagger()` / `UseSwaggerUI()` are inside `if (app.Environment.IsDevelopment())`. |
-| **HTTPS redirection** | `app.UseHttpsRedirection()` is enabled. In containers behind a TLS proxy it is a no-op (no HTTPS port configured). |
-| **CORS locked down** | `Cors:AllowedOrigins` defaults to `[]` (deny all). Allowed origins must be explicitly configured per environment. |
-| **Auth middleware order** | `UseCors` → `UseAuthentication` → `UseAuthorization`. CORS headers are set before auth so pre-flight OPTIONS requests succeed even when credentials are absent. |
-| **JWT validation** | Validates issuer, audience, signing key, and lifetime. `ClockSkew = TimeSpan.Zero` prevents token reuse after expiry. |
-| **Password storage** | PBKDF2-SHA256 with 100 000 iterations and a random salt. Compared with `CryptographicOperations.FixedTimeEquals` to prevent timing attacks. |
-| **Database health check** | `GET /health` includes a `DatabaseHealthCheck` that calls `CanConnectAsync`. Returns `503` if the database is unreachable. |
-| **Non-root container user** | The Dockerfile creates a dedicated `appuser` and drops root privileges before the `ENTRYPOINT`. |
-
 ### Database migrations
 
 Migrations run automatically on startup via `db.Database.MigrateAsync()`.
@@ -429,13 +409,3 @@ All configuration is in `src/Products.Api/appsettings.json`. Secrets (JWT key, c
 | `Jwt:ExpiryMinutes` | 60 | Token lifetime |
 | `ConnectionStrings:DefaultConnection` | `products.db` | SQLite file path |
 | `DemoUsers:Users` | admin / Admin@12345 | PBKDF2-SHA256 hashed |
-
-### Clean Architecture Dependency Rules
-
-```
-Domain  ←  Application  ←  Infrastructure
-                 ↑                ↑
-              Products.Api ───────┘
-```
-
-No layer references a layer to its right. `Domain` has zero external dependencies.
